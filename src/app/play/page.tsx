@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 1st layer will coordinate and create options 
 2 options for the user, one will bring the conflict closer to its end, one will fuel it on
 as the number of interactions with the user increases, the second option gets closer to becoming one that will also bring the conflict closer to its end
-By 10 user interactions, both options will try to resolve the conflict as quickly as possible
 */
 
 export default function Home() {
@@ -39,18 +38,10 @@ export default function Home() {
   const [conflictStarted, setConflictStarted] = useState(false);
   const [conflictEnded, setConflictEnded] = useState(false);
 
-  useEffect(() => {
-    console.log("now these");
-    console.log(allMessages);
-  }, [allMessages]);
 
-  useEffect(() => {
-    console.log(options);
-  }, [options]);
 
   useEffect(() => {
     async function retrieve() {
-      console.log(localStorage.getItem("allMessages"));
       if (localStorage.getItem("allMessages")) {
         setAllMessages(JSON.parse(localStorage.getItem("allMessages")!));
         setConflictStarted(true);
@@ -117,14 +108,12 @@ export default function Home() {
     const getDwightResponse = async () => {
       setIsLoading(1);
       console.log("getting Dwight's statement");
-      // console.log(temparray)
       const newMessage: ChatCompletionMessageParam = {
         content: "Start the conflict",
         role: "user",
       };
       if (!allMessages) {
         setAllMessages([newMessage]);
-        // console.log("this ran")
         const response = await fetch("/play/characters/dwight/api", {
           method: "POST",
           headers: {
@@ -135,7 +124,6 @@ export default function Home() {
         });
         const data = await response.json();
         const { output } = data;
-        // console.log(output);
         temparray = [output];
         setAllMessages([output]);
         localStorage.setItem("dwightLatestMessage", output.content);
@@ -157,8 +145,6 @@ export default function Home() {
         localStorage.setItem("dwightLatestMessage", output.content);
 
         setDwightLatestMessage(JSON.parse(output.content));
-        console.log("yahan pe ye hai");
-        console.log(temparray);
       }
       setIsLoading(0);
 
@@ -179,18 +165,12 @@ export default function Home() {
       });
       const data = await response.json();
       const output = data.output;
-      // console.log(output);
       temparray?.push(output);
       setAllMessages(temparray);
       setJimLatestMessage(JSON.parse(output.content));
       localStorage.setItem("jimLatestMessage", output.content);
 
-      // setJimLatestMessage(output.Jim)
-      // localStorage.setItem("jimLatestMessage", JSON.stringify())
 
-      console.log(temparray, "is this");
-      // console.log("toby se just pehle")
-      // console.log(temparray)
       setIsLoading(0);
       console.log("Jim done");
     };
@@ -209,8 +189,7 @@ export default function Home() {
       });
       const data = await response.json();
       const { output } = data;
-      // console.log(output);
-      // console.log(output.content)
+
       const outputAsObject = await JSON.parse(output.content);
       setOptions([outputAsObject.Toby.option_1, outputAsObject.Toby.option_2]);
       localStorage.setItem(
@@ -223,7 +202,7 @@ export default function Home() {
 
       setIsLoading(0);
       console.log("Toby done");
-      console.log(outputAsObject)
+
     };
 
     await getDwightResponse();
