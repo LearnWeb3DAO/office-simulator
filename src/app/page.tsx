@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 /* 
 2 layers
 
@@ -35,7 +36,7 @@ export default function Home() {
           <div className="text-4xl font-office text-center">HR Training Simulator</div>
           <div className="text-center mt-4 text-lg">Dwight just got mad at Jim and is now in a heated argument with him. The goal of this game is simple: you have to act as Toby 
             and resolve this conflict as quickly as possible </div>
-          <div className="mt-5 flex items-center  justify-center"><button className=" text-gray-100 rounded-md bg-indigo-900 text-lg py-1 px-3">Start!</button></div>
+          <div className="mt-5 flex items-center  justify-center"><Link href="/play"><button className=" text-gray-100 rounded-md bg-blue-700 text-lg py-1 px-3">Play</button></Link></div>
         </div>
     </main>
   );
