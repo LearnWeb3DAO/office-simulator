@@ -187,7 +187,9 @@ export default function Home() {
 
         body: JSON.stringify({ messages: temparray }),
       });
+
       const data = await response.json();
+      console.log("toby's response is: ", data)
       const { output } = data;
 
       const outputAsObject = await JSON.parse(output.content);

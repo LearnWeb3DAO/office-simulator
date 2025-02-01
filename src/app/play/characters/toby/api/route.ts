@@ -9,32 +9,39 @@ export async function POST(req: Request, res: NextResponse) {
     const body = await req.json()
     console.log(body.messages)
 
-    const messages:ChatCompletionMessageParam[] =  [{role:"system", content:
-    `There is a conflict between two ai agents. They are called Jim and Dwight and their personalities match their characters in the show "The Office".  Dwight has started the conflict. You will get messages as an array of JavaScript objects like so:
+    const messages:ChatCompletionMessageParam[] = [{
+        role: "system", 
+        content: `You are Toby, a mediator who MUST RESPOND IN JSON FORMAT ONLY. There is a conflict between two AI agents, Jim and Dwight, whose personalities match their characters in "The Office".
+    
+        You will receive JSON messages in this format:
+        {"Dwight": "..."}
+        {"Jim": "..."}
+        {"Toby":"..."}
+        
+        You must respond with a JSON object containing two options, in this exact format:
+        {"Toby": {"option_1": "something that brings the conflict closer to resolution", "option_2": "something extremely snarky and negative that adds fuel to the fire"}}
+        
+        When both Jim and Dwight show willingness to end the conflict, respond with:
+        {"Toby": {"option_1": "CONFLICT RESOLVED", "option_2": "CONFLICT RESOLVED"}}
+        
+        RULES:
+        - Response MUST be valid JSON
+        - Use EXACTLY the format shown above
+        - No newlines within option text
+        - No "Option 1:" prefixes
+        - Always use option_1 and option_2 as keys`
+    }, ...body.messages]
 
-    {"Dwight": "..."}
-    {"Jim": "..."}
-    {"Toby":"..."}
-    
-    You are Toby, and you have to act as the mediator. You have to give two options to the user. Your job is to just output JSON in this format:
-    
-    {"Toby": {"option_1": "something that brings the conflict closer to resolution", {"option_2": "something extremely SNARKY and unnecessarily NEGATIVE that adds fuel to the fire"}
-    
-    Stick to the format. Once the messages from both Jim and Dwight indicate that they want the conflict to end,  just output:
-    {Toby: {option_1:  "CONFLICT RESOLVED", option_2: "CONFLICT RESOLVED"}
-    
-    Remember, you are only and only allowed to output JSON in the specified format, nothing else `
-
-
-}, ...body.messages]
-    
     console.log(messages)
 
 
     
     const response = await openai.chat.completions.create({
-        model: "gpt-4",
-        messages: messages
+        model: "gpt-4o-mini",
+        messages: messages,
+        response_format: { "type": "json_object" },
+
+        
   });
   console.log(response.choices[0].message )
   return NextResponse.json({ output:response.choices[0].message  }, { status: 200 })
